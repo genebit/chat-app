@@ -18,9 +18,13 @@ io.on('connection', (socket) => {
     console.log(`User-Agent: ${socket.handshake.headers['user-agent']}`)
     console.log(`Time: ${socket.handshake.time}`)
 
+    socket.on('chat message', (msg) => {
+        io.emit('chat message', msg)
+    })
+
     socket.on('disconnect', () => {
         console.log('A user has disconnected!');
-    });
+    })
 })
 
 server.listen(3000, () => {

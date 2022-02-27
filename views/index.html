@@ -11,13 +11,28 @@
 	</head>
 	<body>
 		<div class="container">
-			<div class="row">
-				<input type="text" />
-				<button>Send</button>
+			<h1>Hello</h1>
+			<div class="chat-menu">
+				<input class="text-field" type="text" />
+				<button class="send-btn">Send</button>
 			</div>
 		</div>
 		<script>
 			var socket = io()
+
+			var textField = document.getElementsByClassName('text-field')[0]
+			var sendButton = document.getElementsByClassName('send-btn')[0]
+
+			sendButton.onclick = () => {
+				if (textField.value) {
+					socket.emit('chat message', textField.value)
+					textField.value = ''
+				}
+			}
+
+			socket.on('chat message', function (msg) {
+				document.getElementsByTagName('h1')[0].textContent = msg
+			})
 		</script>
 	</body>
 </html>

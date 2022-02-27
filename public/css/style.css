@@ -1,12 +1,57 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins&display=swap');
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
 *,
 *::before,
 *::after {
+	font-family: 'Poppins', sans-serif;
 	box-sizing: border-box;
 }
 .container {
+	position: relative;
 	width: 90%;
+	height: 100vh;
+	background-color: #eee;
 	margin-left: auto;
 	margin-right: auto;
 }
-body {
+.chat-menu {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	padding: 1rem;
+}
+.chat-menu {
+	background-color: #ccc;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	gap: 0.5rem;
+}
+.text-field {
+	height: 2.25rem;
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	border-radius: 0px;
+	padding: 1rem;
+	transition: outline 200ms;
+	width: 90%;
+}
+.send-btn {
+	display: inline-block;
+	overflow: hidden;
+	padding: 0.5rem 1.5rem;
+	box-shadow: 0 2px 3px 0 rgba(0, 0, 0, 0.3);
+	border-radius: 0px;
+	border: 1px solid rgba(0, 0, 0, 0.3);
+	text-align: center;
+	cursor: pointer;
+}
+.send-btn:active {
+	transform: scale(0.95);
+}
+input:focus {
+	outline: 3px solid rgba(0, 4, 255, 0.1);
 }
