@@ -3,8 +3,8 @@ const app = express()
 const http = require('http')
 const server = http.createServer(app)
 
-const { Server } = require("socket.io");
-const io = new Server(server);
+const { Server } = require('socket.io')
+const io = new Server(server)
 
 app.use(express.static(__dirname + '/public'))
 
@@ -13,21 +13,20 @@ app.get('/', (request, result) => {
 })
 
 io.on('connection', (socket) => {
-    console.log("A user connected.");
-	console.log(`ID: ${socket.id}`)
-    console.log(`User-Agent: ${socket.handshake.headers['user-agent']}`)
-    console.log(`Time: ${socket.handshake.time}`)
+	let connectionInfo = [ socket.id, socket.handshake.headers['user-agent'], socket.handshake.time ]
+	console.log(`A user connected at ${connectionInfo[2]}`)
 
-    socket.on('chat message', (msg) => {
-        io.emit('chat message', msg)
-    })
+    io.emit('user connect')
 
-    socket.on('disconnect', () => {
-        console.log('A user has disconnected!');
-    })
+	socket.on('chat message', (msg) => {
+		io.emit('chat message', msg)
+	})
+
+	socket.on('disconnect', () => {
+		console.log('A user has disconnected!')
+	})
 })
 
 server.listen(3000, () => {
 	console.log('listening on port 3000')
 })
-
