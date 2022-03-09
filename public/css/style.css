@@ -14,19 +14,21 @@ h6 {
 }
 header {
 	width: 100%;
+	padding: 0.5rem 1rem;
 }
 p {
 	padding: 0.5rem 1rem;
 	display: inline-block;
 	background-color: #d0d1e0;
 	border-radius: 20px;
-	max-width: 50%;
+	max-width: 80%;
+	margin: 0.15rem 0;
 	word-break: break-all;
 	color: #303030;
 }
 
 #chat-logs {
-	height: 80vh;
+	height: 75vh;
 	overflow-y: scroll;
 }
 #chat-logs::-webkit-scrollbar-track {
@@ -42,7 +44,7 @@ p {
 .chat-menu {
 	display: flex;
 	justify-content: center;
-	align-content: center;
+	align-items: center;
 	gap: 1rem;
 	padding: 1rem;
 
