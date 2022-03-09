@@ -7,31 +7,69 @@
 		<title>Document</title>
 
 		<script src="/socket.io/socket.io.js"></script>
+
+		<!-- Fontawesome -->
+		<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" />
 		<link rel="stylesheet" href="css/style.css" />
+		<link rel="stylesheet" href="css/custom-ui.css" />
+		<link rel="stylesheet" href="css/override.css" />
 	</head>
 	<body>
-		<div class="container">
-			<h1>Hello</h1>
+		<header class="container">
+			<h2>chatroom <i class="fa-solid fa-comment"></i></h2>
+		</header>
+		<main class="container">
+			<div id="chat-logs"></div>
+			<template user-connect>
+				<i>A user connected!</i>
+				<br />
+			</template>
+			<template messages>
+				<i class="fa fa-user"></i>
+				<p></p>
+				<br />
+			</template>
 			<div class="chat-menu">
-				<input class="text-field" type="text" />
-				<button class="send-btn">Send</button>
+				<input id="text-field" class="form-control" type="text" placeholder="meow mow..." />
+				<button id="send-btn" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i></button>
 			</div>
-		</div>
+		</main>
 		<script>
 			var socket = io()
 
-			var textField = document.getElementsByClassName('text-field')[0]
-			var sendButton = document.getElementsByClassName('send-btn')[0]
+			const textField = document.getElementById('text-field')
+			const sendButton = document.getElementById('send-btn')
 
-			sendButton.onclick = () => {
-				if (textField.value) {
-					socket.emit('chat message', textField.value)
-					textField.value = ''
-				}
+			const messageTemplate = document.querySelector('[messages]')
+			const chatLogs = document.getElementById('chat-logs')
+
+			const userConnectTemplate = document.querySelector('[user-connect]')
+
+			function submitMessage() {
+				socket.emit('chat message', textField.value)
+				textField.value = ''
 			}
 
+			sendButton.onclick = function () {
+				if (textField.value.trim()) submitMessage()
+			}
+
+			document.addEventListener('keyup', function (event) {
+				if (event.keyCode === 13) {
+					submitMessage()
+				}
+			})
+
 			socket.on('chat message', function (msg) {
-				document.getElementsByTagName('h1')[0].textContent = msg
+				const template = messageTemplate.content.cloneNode(true)
+				const message = template.children[1]
+				message.textContent = msg
+				chatLogs.append(template)
+			})
+
+			socket.on('user connect', () => {
+				const template = userConnectTemplate.content.cloneNode(true)
+				chatLogs.append(template)
 			})
 		</script>
 	</body>
