@@ -4,13 +4,8 @@
 
 ### Npm Commands:
 ```
-npm install express
-```
-```
-npm install nodemon
-```
-```
-npm install socket.io
+npm install express socket.io nodemon ejs
+npm install -g localtunnel
 ```
 
 ### Reference
