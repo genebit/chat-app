@@ -4,7 +4,10 @@
 
 ### Npm Commands:
 ```
-npm install express@4
+npm install express
+```
+```
+npm install nodemon
 ```
 ```
 npm install socket.io
