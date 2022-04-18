@@ -1,0 +1,61 @@
+<style>
+	.username-field {
+		background: white;
+		border: none;
+		padding: 1rem;
+		height: 1rem;
+		width: 70%;
+		border-radius: 5px;
+		outline: none;
+		transition: all 250ms ease-in-out;
+	}
+	.username-field:focus {
+		outline: 3px solid rgb(80, 80, 80);
+	}
+	.btn-darker {
+		color: white;
+		background-color: rgba(0, 0, 0, 0.15);
+	}
+	.btn-darker:hover {
+		color: gray;
+		background-color: rgba(0, 0, 0, 0.25);
+	}
+</style>
+<!-- Modal -->
+<div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content bg-dark">
+			<div class="w-100 text-white border-0 text-center p-3">
+				<h5 class="modal-title" id="loginModalLabel">set a username.</h5>
+			</div>
+			<div class="modal-body text-white border-0">
+				<p>this will be used to display your name on the chat.</p>
+				<div id="loginForm" class="d-flex flex-row justify-content-between align-items-center">
+					<label for="username fw-bold">enter a username</label>
+					<input type="text" id="username" class="username-field" placeholder="oogaboga" />
+				</div>
+			</div>
+			<div class="modal-footer text-white border-0 d-flex flex-row justify-content-around">
+				<button type="button" class="flex-fill btn btn-darker" data-bs-dismiss="modal">close</button>
+				<button type="submit" class="flex-fill btn btn-success">join!</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+	$('button[type="submit"]').click(function () {
+		const username = $("#username").val()
+		const usernameRegex = /^(?=.{3,8}$)[a-z]+$/
+
+		if (usernameRegex.test(username)) {
+			$.ajax({
+				url: "/chatroom/",
+				type: "post",
+				data: JSON.stringify({ username: username }),
+				contentType: "application/json",
+				success: function (res) {},
+			})
+		}
+	})
+</script>
