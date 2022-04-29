@@ -7,19 +7,19 @@
 		<title>chatroom | genebit</title>
 		<%- include("../partials/head") %>
 		<style>
-			#message-logs {
+			#messageLogs {
 				border-radius: 5px;
 				background-color: #15181f;
 				overflow-y: scroll;
 			}
-			#message-logs::-webkit-scrollbar {
+			#messageLogs::-webkit-scrollbar {
 				width: 0.5rem;
 			}
-			#message-logs::-webkit-scrollbar-thumb {
+			#messageLogs::-webkit-scrollbar-thumb {
 				background-color: #198754;
 				border-radius: 5px;
 			}
-			#message-logs::-webkit-scrollbar-track {
+			#messageLogs::-webkit-scrollbar-track {
 				background-color: rgba(0, 0, 0, 0.3);
 				border-radius: 5px;
 			}
@@ -34,6 +34,7 @@
 		</style>
 	</head>
 	<body>
+		<input id="__username" type="text" value="<%= username %>" hidden>
 		<main class="container py-4 w-50 vh-100 bg-dark d-flex justify-content-between flex-column shadow">
 			<header class="w-100 d-flex justify-content-center align-items-center">
 				<ul class="list-unstyled d-flex flex-row gap-3 m-0">
@@ -45,54 +46,65 @@
 					</li>
 				</ul>
 			</header>
-			<main id="message-logs" class="rounded w-100 h-75 text-white p-4">
-				<template>
+			<main id="messageLogs" class="rounded w-100 h-75 text-white p-4">
+				<template message>
 					<p class="py-2 px-3 mw-auto rounded bg-success">
-						<small class="fw-bold"><i class="fas fa-user"></i> genebit: </small>
-						<span class="message"></span>
+						<small  class="fw-bold"><i class="fas fa-user"></i><%= username %></small>: 
+						<span class="__message"></span>
 					</p>
 				</template>
-				<template>
+				<template user-connected-message>
 					<p class="py-0 px-3 rounded">
-						<small class="text-muted"><b>genebit</b> joined the group chat!</small>
+						<small class="text-muted"><b><%= username %></b> joined the group chat!</small>
 						<hr class="text-muted">
 					</p>
 				</template>
-
-				<!-- Sample -->
-				<p class="py-0 px-3 mw-auto rounded">
-					<small class="text-muted"><b>genebit</b> joined the group chat!</small>
-					<hr class="text-muted">
-				</p>
-				<p class="py-2 px-3 mw-auto rounded bg-success">
-					<small class="fw-bold"><i class="fas fa-user"></i> username:</small>
-					<span>Lorem ipsum dolor sit amet.</span>
-				</p>
-				<p class="py-2 px-3 mw-auto rounded bg-success">
-					<small class="fw-bold"><i class="fas fa-user"></i> username:</small>
-					<span>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Beatae, quis distinctio vel sed tenetur tempore.</span>
-				</p>
-				<p class="py-2 px-3 mw-auto rounded bg-success">
-					<small class="fw-bold"><i class="fas fa-user"></i> username:</small>
-					<span>Lorem ipsum dolor sit.</span>
-				</p>
-				<p class="py-2 px-3 mw-auto rounded bg-success">
-					<small class="fw-bold"><i class="fas fa-user"></i> username:</small>
-					<span
-						>Lorem ipsum dolor sit amet consectetur adipisicing elit. Voluptates, eligendi. Quasi reiciendis deleniti voluptatum vero repudiandae perferendis ipsam tempora, laudantium ratione quia repellat alias doloribus officiis culpa maiores eos error? Ea commodi voluptatibus veniam nesciunt quis voluptate, expedita consectetur quam veritatis eveniet voluptas deleniti et dolor, tempore nihil doloremque suscipit facere recusandae ipsum nostrum exercitationem impedit laboriosam.
-						Necessitatibus quis impedit incidunt earum possimus nam enim doloribus velit. Voluptatem est minus fuga voluptas maiores nobis, adipisci assumenda fugiat cupiditate aliquid beatae suscipit mollitia, velit explicabo dolorum autem eum? Dolor minus rem nobis. Expedita voluptates ullam tenetur quis, obcaecati eveniet dolores doloremque?</span
-					>
-				</p>
+				
 			</main>
 			<footer class="container w-75">
 				<div class="input-group w-100 mx-auto">
-					<input type="text" class="form-control" placeholder="type your message here..." />
-					<button class="btn btn-success" type="button">
+					<input id="messageField" type="text" class="form-control" placeholder="type your message here..." />
+					<button id="sendButton" class="btn btn-success" type="button">
 						send
 						<i class="fa-solid fa-paper-plane"></i>
 					</button>
 				</div>
 			</footer>
 		</main>
+		<script src="/socket.io/socket.io.js"></script>
+		<script>
+			var socket = io.connect()
+
+			// message form
+			const sendButton = document.getElementById("sendButton")
+			
+			function submitMessage() {
+				const messageField = document.getElementById("messageField").value.trim()
+
+				socket.emit("chatMessage", messageField)
+				messageField.value = ""
+			}
+
+			socket.on("chatMessage", (msg) => {
+				const messageTemplate = document.querySelector("template[message]")
+				const chatLogs = document.getElementById("#messageLogs")
+
+				const template = messageTemplate.content.cloneNode(true)
+				const message = template.querySelector("#__message")
+				message.textContent = msg
+				chatLogs.append(template)
+			})
+
+			sendButton.onclick = () => {
+				submitMessage()
+			}
+
+			// On pressed enter key
+			document.addEventListener("keyup", (event) => {
+				if (event.keyCode === 13) {
+					submitMessage()
+				}
+			})
+		</script>
 	</body>
 </html>

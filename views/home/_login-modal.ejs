@@ -42,20 +42,22 @@
 		</div>
 	</div>
 </div>
-
+<script src="/socket.io/socket.io.js"></script>
 <script>
+	var socket = io.connect()
+
 	$('button[type="submit"]').click(function () {
-		const username = $("#username").val()
 		const usernameRegex = /^(?=.{3,8}$)[a-z]+$/
+		const username = $("#username").val()
+		const data = { username: username }
 
 		if (usernameRegex.test(username)) {
-			$.ajax({
-				url: "/chatroom/",
-				type: "post",
-				data: JSON.stringify({ username: username }),
-				contentType: "application/json",
-				success: function (res) {},
-			})
+			socket.emit("sendUsername", data)
 		}
+	})
+	$("#loginModal").on("hidden.bs.modal", () => {
+		const username = $("#username").val()
+		const data = { username: username }
+		socket.emit("discardUsername", data)
 	})
 </script>
